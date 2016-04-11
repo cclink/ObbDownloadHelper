@@ -1,18 +1,5 @@
 package com.cclink.obbdownloader;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.AsyncTask;
-import android.os.Messenger;
-import android.util.Log;
-import android.view.WindowManager;
-
 import com.google.android.vending.expansion.downloader.DownloadProgressInfo;
 import com.google.android.vending.expansion.downloader.DownloaderClientMarshaller;
 import com.google.android.vending.expansion.downloader.DownloaderServiceMarshaller;
@@ -21,12 +8,16 @@ import com.google.android.vending.expansion.downloader.IDownloaderClient;
 import com.google.android.vending.expansion.downloader.IDownloaderService;
 import com.google.android.vending.expansion.downloader.IStub;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Messenger;
+import android.util.Log;
+import android.view.WindowManager;
 
 public class ObbDownloadHelper implements IDownloaderClient {
 
@@ -55,7 +46,8 @@ public class ObbDownloadHelper implements IDownloaderClient {
     private MyProgressDialog mDownloadProgressDlg;
     private XAPKFile[] xAPKS;
 
-    public ObbDownloadHelper(Context context) {
+    @SuppressWarnings("unused")
+	public ObbDownloadHelper(Context context) {
 		mContext = context;
         if (ObbInfo.MAIN_EXPANSION_FILE_VERSION > 0 && ObbInfo.MAIN_EXPANSION_FILE_SIZE > 0) {
             if (ObbInfo.PATCH_EXPANSION_FILE_VERSION > 0 && ObbInfo.PATCH_EXPANSION_FILE_SIZE > 0) {
@@ -95,30 +87,8 @@ public class ObbDownloadHelper implements IDownloaderClient {
                 return false;
             }
         }
-        // 获取res.npk文件路径
-        String resNpkFileName = getNpkFilePath();
-        // resNpkFileName为null表示sdcard没有mount
-        if (resNpkFileName == null) {
-            return false;
-        }
-        // 判断res.npk文件是否存在
-        File file = new File(resNpkFileName);
-        if (file.exists()) {
-            Log.i("APKExpansionDownloader", "Expansion files is already delivered");
-            return true;
-        } else {
-            Log.i("APKExpansionDownloader", "Expansion files is not delivered: res.npk does not exist");
-            return false;
-        }
-    }
-    
-    private String getNpkFilePath() {
-        File myExternalFileDir = mContext.getExternalFilesDir(null);
-        if (myExternalFileDir != null) {
-            return myExternalFileDir.toString() + File.separator + "netease" + File.separator + "txx" + File.separator + "res.npk";
-        } else {
-            return null;
-        }
+        Log.i("APKExpansionDownloader", "Expansion files is already delivered");
+        return true;
     }
     
     public void downloadExpansionFiles(Activity activity, onDownloadStateChanged listener) {
@@ -139,7 +109,6 @@ public class ObbDownloadHelper implements IDownloaderClient {
             	// Instantiate a member instance of IStub
                 Log.i("APKExpansionDownloader", "Try to download obb file");
                 mDownloaderClientStub = DownloaderClientMarshaller.CreateStub(this, ObbDownloadService.class);
-                onResume();
                 // 创建并显示进度对话框
                 mDownloadProgressDlg = new MyProgressDialog(activity);
                 mDownloadProgressDlg.show();
@@ -147,80 +116,14 @@ public class ObbDownloadHelper implements IDownloaderClient {
             // 不需要下载
             else {
                 Log.i("APKExpansionDownloader", "No need to download obb file");
-            	// 判断res.npk文件是否存在
-            	String resNpkFileName = getNpkFilePath();
-                if (resNpkFileName == null) {
-                    alert(true);
-                } else {
-                    copyFile(resNpkFileName, true);
+                if (mListener != null) {
+                    mListener.onDownloadSuccess();
                 }
             }
     	} catch (NameNotFoundException e) {
     		e.printStackTrace();
     	}
     }
-
-    private void alert(final boolean check) {
-        String dlgTitle = getString("obb_access_failed");
-        String dlgMessage = getString("obb_access_message");
-        String dlgBtnRetry = getString("obb_download_btn_retry");
-        String dlgBtnCancel = getString("obb_download_btn_cancel");
-
-        new AlertDialog.Builder(mContext)
-                .setTitle(dlgTitle)
-                .setMessage(dlgMessage)
-                .setPositiveButton(dlgBtnRetry, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String resNpkFileName = getNpkFilePath();
-                        if (resNpkFileName != null) {
-                            copyFile(resNpkFileName, check);
-                        } else {
-                            if (dialog instanceof AlertDialog) {
-                                ((AlertDialog)dialog).getWindow().getDecorView().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        alert(check);
-                                    }
-                                }, 500);
-                            } else {
-                                alert(check);
-                            }
-                        }
-                    }
-                })
-                .setNegativeButton(dlgBtnCancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (mListener != null) {
-                            mListener.onDownloadCanceled();
-                        }
-                    }
-                })
-                .show();
-    }
-
-	private void copyFile(String resNpkFileName, boolean check) {
-        Log.i("APKExpansionDownloader", "Start copy file");
-        File dstFile = new File(resNpkFileName);
-        // 需要检查，则判断res.npk文件是否存在，如果不存在，才会拷贝
-        if (check) {
-            // res.npk文件存在，不拷贝文件
-            if (dstFile.exists()) {
-                Log.i("APKExpansionDownloader", "dest file exists, no need to copy");
-                if (mListener != null) {
-                    mListener.onDownloadSuccess();
-                }
-                return;
-            }
-        }
-        for (XAPKFile xf : xAPKS) {
-            String fileName = Helpers.getExpansionAPKFileName(mContext, xf.mIsMain, xf.mFileVersion);
-            String srcFileName = Helpers.generateSaveFileName(mContext, fileName);
-            File srcFile = new File(srcFileName);
-            new CopyTask(srcFile, dstFile).execute();
-        }
-	}
 
     public void onResume() {
         if (null != mDownloaderClientStub) {
@@ -232,81 +135,6 @@ public class ObbDownloadHelper implements IDownloaderClient {
         if (null != mDownloaderClientStub) {
             mDownloaderClientStub.disconnect(mContext);
         }
-    }
-
-    private class CopyTask extends AsyncTask<Void, Integer, Boolean> {
-    	private File mSrcFile;
-    	private File mDstFile;
-    	
-    	public CopyTask(File src, File dst) {
-    		mSrcFile = src;
-    		mDstFile = dst;
-		}
-    	
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			try {
-				return copy(mSrcFile, mDstFile);
-			} catch (Exception e) {
-				return false;
-			}
-		}
-    	
-		private boolean copy(File src, File dst) throws IOException {
-			// 源文件不存在，返回失败
-			if (!src.exists()) {
-                Log.w("APKExpansionDownloader", "Copy file failed, obb file does not exist");
-				return false;
-			}
-			// 目标文件不存在，创建空白的目标文件
-			if (!dst.exists()) {
-                String parent = dst.getParent();
-                File parentFile = new File(parent);
-                if (!parentFile.exists()) {
-                    if (!parentFile.mkdirs()) {
-                        Log.w("APKExpansionDownloader", "Copy file failed, create dirs failed");
-                        return false;
-                    }
-                }
-				if (!dst.createNewFile()) {
-                    Log.w("APKExpansionDownloader", "Copy file failed, create file failed");
-                    return false;
-                }
-			}
-			InputStream in = null;
-	        OutputStream out = null;
-	        try {
-	        	in = new FileInputStream(src);
-		        out = new FileOutputStream(dst);
-	        	// Transfer bytes from in to out
-		        byte[] buf = new byte[1024];
-		        int len;
-		        while ((len = in.read(buf)) > 0) {
-		            out.write(buf, 0, len);
-		        }
-		        return true;
-			} finally {
-				if (in != null) {
-					in.close();
-				}
-				if (out != null) {
-					out.close();
-				}
-			}
-	    }
-		
-		@Override
-		protected void onPostExecute(Boolean result) {
-			if (mListener != null) {
-				if (result) {
-                    Log.i("APKExpansionDownloader", "Copy file success");
-					mListener.onDownloadSuccess();
-				} else {
-                    Log.w("APKExpansionDownloader", "Copy file failed");
-					mListener.onDownloadFailed();
-				}
-			}
-		}
     }
     
 	@Override
@@ -366,7 +194,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
         return mContext.getString(getResourceId(resName, "string"));
     }
 
-	// 下载进度对话框
+    // 下载进度对话框
 	private class MyProgressDialog extends ProgressDialog {
 		private boolean mIsPaused;
         private boolean mIsComplete;
@@ -408,7 +236,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
                     if (mIsComplete) {
                         return;
                     }
-                    // 只有执行到onServiceConnected，mRemoteService才会被创建，所以需要判断其是否为null
+                	// 只有执行到onServiceConnected，mRemoteService才会被创建，所以需要判断其是否为null
 					if (mRemoteService != null) {
 						if (mIsPaused) {
 							mRemoteService.requestContinueDownload();
@@ -439,7 +267,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
                     }
                     // 关闭对话框
 					trueDismiss();
-                    // 通知下载被取消
+					// 通知下载被取消
 					if (mListener != null) {
 						mListener.onDownloadCanceled();
 					}
@@ -464,12 +292,9 @@ public class ObbDownloadHelper implements IDownloaderClient {
                     @Override
                     public void run() {
                         trueDismiss();
-                        String resNpkFileName = getNpkFilePath();
-                        if (resNpkFileName == null) {
-                            alert(false);
-                        } else {
-                            copyFile(resNpkFileName, false);
-                        }
+                        if (mListener != null) {
+							mListener.onDownloadSuccess();
+						}
                     }
                 }, 2000);
                 mIsComplete = true;

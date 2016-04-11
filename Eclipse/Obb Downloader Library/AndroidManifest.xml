@@ -1,6 +1,8 @@
 <manifest package="com.netease.apkextdownloader"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="23" />
+    
     <!-- Required to access Google Play Licensing -->
     <uses-permission android:name="com.android.vending.CHECK_LICENSE" />
     <!-- Required to keep CPU alive while downloading files (NOT to keep screen awake) -->
