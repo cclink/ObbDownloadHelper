@@ -16,9 +16,6 @@
 
 package com.google.android.vending.licensing;
 
-import com.google.android.vending.licensing.util.Base64;
-import com.google.android.vending.licensing.util.Base64DecoderException;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +27,9 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.provider.Settings.Secure;
 import android.util.Log;
+
+import com.google.android.vending.licensing.util.Base64;
+import com.google.android.vending.licensing.util.Base64DecoderException;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -146,11 +146,20 @@ public class LicenseChecker implements ServiceConnection {
             if (mService == null) {
                 Log.i(TAG, "Binding to licensing service.");
                 try {
+                	// fix the crash in Android 5.0
+                	// see: http://stackoverflow.com/questions/26530565/android-5-0-l-service-intent-must-be-explicit-in-google-analytics
+                	//      https://github.com/cclink/ObbDownloadHelper/blob/master/images/Image%20408.png
+                    Intent serviceIntent = new Intent(
+                            new String(Base64.decode("Y29tLmFuZHJvaWQudmVuZGluZy5saWNlbnNpbmcuSUxpY2Vuc2luZ1NlcnZpY2U=")));
+                    serviceIntent.setPackage("com.android.vending");
+
+//                    boolean bindResult = mContext.bindService(new Intent(new String(Base64.decode("Y29tLmFuZHJvaWQudmVuZGluZy5saWNlbnNpbmcuSUxpY2Vuc2luZ1NlcnZpY2U="))),
+//                            this, // ServiceConnection.
+//                            Context.BIND_AUTO_CREATE);
+                    
                     boolean bindResult = mContext
                             .bindService(
-                                    new Intent(
-                                            new String(
-                                                    Base64.decode("Y29tLmFuZHJvaWQudmVuZGluZy5saWNlbnNpbmcuSUxpY2Vuc2luZ1NlcnZpY2U="))),
+                                    serviceIntent,
                                     this, // ServiceConnection.
                                     Context.BIND_AUTO_CREATE);
 
