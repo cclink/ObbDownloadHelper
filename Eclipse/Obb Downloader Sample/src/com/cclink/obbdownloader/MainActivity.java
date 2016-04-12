@@ -30,6 +30,8 @@ public class MainActivity extends Activity {
 					Toast.makeText(MainActivity.this, "Download canceled.", Toast.LENGTH_SHORT).show();
 				}
 			});
+		} else {
+			Toast.makeText(MainActivity.this, "Expansion file is already delivered.", Toast.LENGTH_SHORT).show();
 		}
 	}
 	
