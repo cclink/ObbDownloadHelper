@@ -34,7 +34,7 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		if (mDownloaderHelper != null) {
-			mDownloaderHelper.onResume();
+			mDownloaderHelper.connect();
 		}
 	}
 	
@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 	protected void onStop() {
 		super.onStop();
 		if (mDownloaderHelper != null) {
-			mDownloaderHelper.onStop();
+			mDownloaderHelper.disconnect();
 		}
 	}
 }

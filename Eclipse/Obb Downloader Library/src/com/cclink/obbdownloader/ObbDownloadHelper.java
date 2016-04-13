@@ -130,7 +130,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
     
     private void downloadSuccess() {
     	if (!mIsFinished) {
-    		onStop();
+    		disconnect();
         	if (mListener != null) {
     			mListener.onDownloadSuccess();
     		}
@@ -140,7 +140,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
     
     private void downloadFailed() {
     	if (!mIsFinished) {
-    		onStop();
+    		disconnect();
         	if (mListener != null) {
     			mListener.onDownloadFailed();
     		}
@@ -148,7 +148,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
     	}
     }
 
-    public void onResume() {
+    public void connect() {
         if (mDownloaderClientStub != null && !mIsFinished && !mIsConnected) {
         	Log.i("APKExpansionDownloader", "Connect to downloader service.");
             mDownloaderClientStub.connect(mContext);
@@ -156,7 +156,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
         }
     }
 
-    public void onStop() {
+    public void disconnect() {
         if (mDownloaderClientStub != null && !mIsFinished && mIsConnected) {
         	Log.i("APKExpansionDownloader", "Disconnect from downloader service.");
             mDownloaderClientStub.disconnect(mContext);
