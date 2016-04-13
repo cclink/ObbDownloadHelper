@@ -24,11 +24,6 @@ public class MainActivity extends Activity {
 				public void onDownloadFailed() {
 					Toast.makeText(MainActivity.this, "Download failed.", Toast.LENGTH_SHORT).show();
 				}
-				
-				@Override
-				public void onDownloadCanceled() {
-					Toast.makeText(MainActivity.this, "Download canceled.", Toast.LENGTH_SHORT).show();
-				}
 			});
 		} else {
 			Toast.makeText(MainActivity.this, "Expansion file is already delivered.", Toast.LENGTH_SHORT).show();

@@ -137,13 +137,6 @@ public class ObbDownloadHelper implements IDownloaderClient {
 			mListener.onDownloadFailed();
 		}
     }
-    
-    private void downloadCanceled() {
-    	onStop();
-    	if (mListener != null) {
-			mListener.onDownloadCanceled();
-		}
-    }
 
     public void onResume() {
         if (mDownloaderClientStub != null && !mIsConnected) {
@@ -300,7 +293,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
                     // Dismiss the dialog
                     trueDismiss();
                     // Inform the download has been canceled
-                    downloadCanceled();
+                    downloadFailed();
                 }
             });
         }
@@ -352,6 +345,5 @@ public class ObbDownloadHelper implements IDownloaderClient {
     public interface onDownloadStateChanged {
         void onDownloadSuccess();
         void onDownloadFailed();
-        void onDownloadCanceled();
     }
 }
