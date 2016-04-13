@@ -148,17 +148,25 @@ public class ObbDownloadHelper implements IDownloaderClient {
     	}
     }
 
+    /* 
+     * connect to the download service
+     */
     public void connect() {
         if (mDownloaderClientStub != null && !mIsFinished && !mIsConnected) {
-        	Log.i("APKExpansionDownloader", "Connect to downloader service.");
+        	Log.i("APKExpansionDownloader", "Connect to download service.");
             mDownloaderClientStub.connect(mContext);
             mIsConnected = true;
         }
     }
 
+    /* 
+     * disconnect from the download service
+     * after download process finished, whether success or failure, disconnect should be called
+     * otherwise a leaked may produced
+     */
     public void disconnect() {
         if (mDownloaderClientStub != null && !mIsFinished && mIsConnected) {
-        	Log.i("APKExpansionDownloader", "Disconnect from downloader service.");
+        	Log.i("APKExpansionDownloader", "Disconnect from download service.");
             mDownloaderClientStub.disconnect(mContext);
             mIsConnected = false;
         }
