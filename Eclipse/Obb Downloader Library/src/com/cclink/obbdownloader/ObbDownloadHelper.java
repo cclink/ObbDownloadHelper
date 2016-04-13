@@ -45,10 +45,12 @@ public class ObbDownloadHelper implements IDownloaderClient {
     private IDownloaderService mRemoteService;
     private MyProgressDialog mDownloadProgressDlg;
     private XAPKFile[] xAPKS;
+    private boolean mIsConnected;
 
     @SuppressWarnings("unused")
     public ObbDownloadHelper(Context context) {
         mContext = context;
+        mIsConnected = false;
         if (ObbInfo.MAIN_EXPANSION_FILE_VERSION > 0 && ObbInfo.MAIN_EXPANSION_FILE_SIZE > 0) {
             if (ObbInfo.PATCH_EXPANSION_FILE_VERSION > 0 && ObbInfo.PATCH_EXPANSION_FILE_SIZE > 0) {
                 xAPKS = new XAPKFile[2];
@@ -75,7 +77,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
      * @return true if they are present.
      */
     public boolean expansionFilesDelivered() {
-        // 判断所有的apk扩展文件是否存在，且文件大小一致
+        // Determine whether the apk expansion files exist, and the file size is correct
         for (XAPKFile xf : xAPKS) {
             String fileName = Helpers.getExpansionAPKFileName(mContext, xf.mIsMain, xf.mFileVersion);
             if (!Helpers.doesFileExist(mContext, fileName, xf.mFileSize, false)) {
@@ -101,21 +103,20 @@ public class ObbDownloadHelper implements IDownloaderClient {
 
             // Start the download service (if required)
             int startResult = DownloaderClientMarshaller.startDownloadServiceIfRequired(activity, pendingIntent, ObbDownloadService.class);
-            // If download has started, initialize this activity to show
-            // download progress
+            // If download has started, initialize a ProgressDialog to show download progress
             if (startResult != DownloaderClientMarshaller.NO_DOWNLOAD_REQUIRED) {
                 // This is where you do set up to display the download
                 // progress (next step)
                 // Instantiate a member instance of IStub
-                Log.i("APKExpansionDownloader", "Try to download obb file");
+                Log.i("APKExpansionDownloader", "Try to download obb files");
                 mDownloaderClientStub = DownloaderClientMarshaller.CreateStub(this, ObbDownloadService.class);
-                // 创建并显示进度对话框
+                // Create and show the progress dialog
                 mDownloadProgressDlg = new MyProgressDialog(activity);
                 mDownloadProgressDlg.show();
             }
-            // 不需要下载
+            // No need to download obb files
             else {
-                Log.i("APKExpansionDownloader", "No need to download obb file");
+                Log.i("APKExpansionDownloader", "No need to download obb files");
                 if (mListener != null) {
                     mListener.onDownloadSuccess();
                 }
@@ -126,16 +127,18 @@ public class ObbDownloadHelper implements IDownloaderClient {
     }
 
     public void onResume() {
-        if (null != mDownloaderClientStub) {
-            Log.i("APKExpansionDownloader", "Connect to downloader service.");
+        if (mDownloaderClientStub != null && !mIsConnected) {
+        	Log.i("APKExpansionDownloader", "Connect to downloader service.");
             mDownloaderClientStub.connect(mContext);
+            mIsConnected = true;
         }
     }
 
     public void onStop() {
-        if (null != mDownloaderClientStub) {
-            Log.i("APKExpansionDownloader", "Disconnect from downloader service.");
+        if (mDownloaderClientStub != null && mIsConnected) {
+        	Log.i("APKExpansionDownloader", "Disconnect from downloader service.");
             mDownloaderClientStub.disconnect(mContext);
+            mIsConnected = false;
         }
     }
     
@@ -150,18 +153,18 @@ public class ObbDownloadHelper implements IDownloaderClient {
     public void onDownloadStateChanged(int newState) {
         Log.i("APKExpansionDownloader", "DownloadStateChanged: " + newState);
         switch (newState) {
-            // 下载成功
+            // Download success
             case IDownloaderClient.STATE_COMPLETED:
                 mDownloadProgressDlg.success();
                 break;
-            // 下载失败
+            // Download failure
             case IDownloaderClient.STATE_FAILED_CANCELED:
             case IDownloaderClient.STATE_FAILED_FETCHING_URL:
             case IDownloaderClient.STATE_FAILED_UNLICENSED:
             case IDownloaderClient.STATE_FAILED:
                 mDownloadProgressDlg.failed();
                 break;
-            // 下载暂停
+            // Download paused
             case IDownloaderClient.STATE_PAUSED_NEED_CELLULAR_PERMISSION:
             case IDownloaderClient.STATE_PAUSED_WIFI_DISABLED_NEED_CELLULAR_PERMISSION:
             case IDownloaderClient.STATE_PAUSED_BY_REQUEST:
@@ -169,13 +172,13 @@ public class ObbDownloadHelper implements IDownloaderClient {
             case IDownloaderClient.STATE_PAUSED_SDCARD_UNAVAILABLE:
                 mDownloadProgressDlg.pause();
                 break;
-            // 恢复下载
+            // Download resume (do nothing)
             case IDownloaderClient.STATE_IDLE:
             case IDownloaderClient.STATE_CONNECTING:
             case IDownloaderClient.STATE_FETCHING_URL:
             case IDownloaderClient.STATE_DOWNLOADING:
                 break;
-            // 未知状态
+            // unknown state (do nothing)
             default:
                 break;
         }
@@ -196,18 +199,18 @@ public class ObbDownloadHelper implements IDownloaderClient {
         return mContext.getString(getResourceId(resName, "string"));
     }
 
-    // 下载进度对话框
+    // Custom progress dialog
     private class MyProgressDialog extends ProgressDialog {
-        private boolean mIsPaused;
-        private boolean mIsComplete;
-        private String mDlgTitleDownloading;
-        private String mDlgTitleFailed;
-        private String mDlgTitlePaused;
-        private String mDlgTitleComplete;
-        private String mDlgCancelBtnText;
-        private String mDlgResumeBtnText;
-        private String mDlgPauseBtnText;
-        private String mDlgRetryBtnText;
+        private boolean mIsPaused;				// Indicates whether the download process is paused
+        private boolean mIsComplete;			// Indicates whether the download process is complete
+        private String mDlgTitleDownloading;	// Dialog title when downloading
+        private String mDlgTitleFailed;			// Dialog title when download failed
+        private String mDlgTitlePaused;			// Dialog title when download paused
+        private String mDlgTitleComplete;		// Dialog title when download complete
+        private String mDlgCancelBtnText;		// Dialog cancel button text
+        private String mDlgResumeBtnText;		// Dialog resume button text
+        private String mDlgPauseBtnText;		// Dialog pause button text
+        private String mDlgRetryBtnText;		// Dialog retry button text
         
         public MyProgressDialog(Context context) {
             super(context);
@@ -235,17 +238,24 @@ public class ObbDownloadHelper implements IDownloaderClient {
             setButton(DialogInterface.BUTTON_POSITIVE, mDlgPauseBtnText, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                	// If download is already complete, do nothing.
                     if (mIsComplete) {
                         return;
                     }
-                    // 只有执行到onServiceConnected，mRemoteService才会被创建，所以需要判断其是否为null
+                    // Under certain circumstance, onServiceConnected() is not called, and mRemoteService is null
+                    // So a null check is necessary
                     if (mRemoteService != null) {
+                    	// Current download state is paused.
+                    	// A click on this button would trigger a continue download request
                         if (mIsPaused) {
                             mRemoteService.requestContinueDownload();
                             setTitle(mDlgTitleDownloading);
                             getButton(DialogInterface.BUTTON_POSITIVE).setText(mDlgPauseBtnText);
                             Log.i("APKExpansionDownloader", "download continued by user");
-                        } else {
+                        }
+                        // Current download state is downloading.
+                        // A click on this button would trigger a pause download request
+                        else {
                             mRemoteService.requestPauseDownload();
                             setTitle(mDlgTitlePaused);
                             getButton(DialogInterface.BUTTON_POSITIVE).setText(mDlgResumeBtnText);
@@ -259,17 +269,18 @@ public class ObbDownloadHelper implements IDownloaderClient {
             setButton(DialogInterface.BUTTON_NEGATIVE, mDlgCancelBtnText, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                	// If download is already complete, do nothing.
                     if (mIsComplete) {
                         return;
                     }
-                    // 点击取消后，停止下载
+                    // Stop the download service
                     if (mRemoteService != null) {
                         mRemoteService.requestAbortDownload();
                         Log.i("APKExpansionDownloader", "download canceled by user");
                     }
-                    // 关闭对话框
+                    // Dismiss the dialog
                     trueDismiss();
-                    // 通知下载被取消
+                    // Inform the download has been canceled
                     if (mListener != null) {
                         mListener.onDownloadCanceled();
                     }
@@ -277,6 +288,9 @@ public class ObbDownloadHelper implements IDownloaderClient {
             });
         }
         
+        // In order to prevent close of the dialog when click BUTTON POSITIVE, 
+        // we override dismiss() and do nothing here.
+        // If you want close the dialog manually, call trueDismiss()
         @Override
         public void dismiss() {
             // do nothing
@@ -287,9 +301,12 @@ public class ObbDownloadHelper implements IDownloaderClient {
         }
         
         public void success() {
+        	// Sometimes, success is called more than once after download complete.
+        	// So a check is necessary
             if (!mIsComplete) {
                 setProgress(100);
                 setTitle(mDlgTitleComplete);
+                // Close the dialog after two seconds
                 getWindow().getDecorView().postDelayed(new Runnable() {
                     @Override
                     public void run() {
