@@ -46,11 +46,13 @@ public class ObbDownloadHelper implements IDownloaderClient {
     private MyProgressDialog mDownloadProgressDlg;
     private XAPKFile[] xAPKS;
     private boolean mIsConnected;
+    private boolean mIsFinished;
 
     @SuppressWarnings("unused")
     public ObbDownloadHelper(Context context) {
         mContext = context;
         mIsConnected = false;
+        mIsFinished = false;
         if (ObbInfo.MAIN_EXPANSION_FILE_VERSION > 0 && ObbInfo.MAIN_EXPANSION_FILE_SIZE > 0) {
             if (ObbInfo.PATCH_EXPANSION_FILE_VERSION > 0 && ObbInfo.PATCH_EXPANSION_FILE_SIZE > 0) {
                 xAPKS = new XAPKFile[2];
@@ -96,6 +98,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
     public void downloadExpansionFiles(Activity activity, onDownloadStateChanged listener) {
         try {
             mListener = listener;
+            mIsFinished = false;
             // Build an Intent to start this activity from the Notification
             Intent notifierIntent = new Intent(activity, activity.getClass());
             notifierIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -121,25 +124,32 @@ public class ObbDownloadHelper implements IDownloaderClient {
             }
         } catch (NameNotFoundException e) {
             e.printStackTrace();
+            downloadFailed();
         }
     }
     
     private void downloadSuccess() {
-        onStop();
-    	if (mListener != null) {
-			mListener.onDownloadSuccess();
+    	if (!mIsFinished) {
+    		onStop();
+        	if (mListener != null) {
+    			mListener.onDownloadSuccess();
+    		}
+        	mIsFinished = true;
 		}
     }
     
     private void downloadFailed() {
-        onStop();
-    	if (mListener != null) {
-			mListener.onDownloadFailed();
-		}
+    	if (!mIsFinished) {
+    		onStop();
+        	if (mListener != null) {
+    			mListener.onDownloadFailed();
+    		}
+        	mIsFinished = true;
+    	}
     }
 
     public void onResume() {
-        if (mDownloaderClientStub != null && !mIsConnected) {
+        if (mDownloaderClientStub != null && !mIsFinished && !mIsConnected) {
         	Log.i("APKExpansionDownloader", "Connect to downloader service.");
             mDownloaderClientStub.connect(mContext);
             mIsConnected = true;
@@ -147,7 +157,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
     }
 
     public void onStop() {
-        if (mDownloaderClientStub != null && mIsConnected) {
+        if (mDownloaderClientStub != null && !mIsFinished && mIsConnected) {
         	Log.i("APKExpansionDownloader", "Disconnect from downloader service.");
             mDownloaderClientStub.disconnect(mContext);
             mIsConnected = false;
