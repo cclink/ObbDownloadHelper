@@ -117,13 +117,32 @@ public class ObbDownloadHelper implements IDownloaderClient {
             // No need to download obb files
             else {
                 Log.i("APKExpansionDownloader", "No need to download obb files");
-                if (mListener != null) {
-                    mListener.onDownloadSuccess();
-                }
+                downloadSuccess();
             }
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
+    }
+    
+    private void downloadSuccess() {
+        onStop();
+    	if (mListener != null) {
+			mListener.onDownloadSuccess();
+		}
+    }
+    
+    private void downloadFailed() {
+        onStop();
+    	if (mListener != null) {
+			mListener.onDownloadFailed();
+		}
+    }
+    
+    private void downloadCanceled() {
+    	onStop();
+    	if (mListener != null) {
+			mListener.onDownloadCanceled();
+		}
     }
 
     public void onResume() {
@@ -170,7 +189,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
             case IDownloaderClient.STATE_PAUSED_BY_REQUEST:
             case IDownloaderClient.STATE_PAUSED_ROAMING:
             case IDownloaderClient.STATE_PAUSED_SDCARD_UNAVAILABLE:
-                mDownloadProgressDlg.pause();
+                mDownloadProgressDlg.paused();
                 break;
             // Download resume (do nothing)
             case IDownloaderClient.STATE_IDLE:
@@ -281,9 +300,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
                     // Dismiss the dialog
                     trueDismiss();
                     // Inform the download has been canceled
-                    if (mListener != null) {
-                        mListener.onDownloadCanceled();
-                    }
+                    downloadCanceled();
                 }
             });
         }
@@ -311,9 +328,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
                     @Override
                     public void run() {
                         trueDismiss();
-                        if (mListener != null) {
-                            mListener.onDownloadSuccess();
-                        }
+                        downloadSuccess();
                     }
                 }, 2000);
                 mIsComplete = true;
@@ -327,7 +342,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
             mIsPaused = true;
         }
         
-        public void pause() {
+        public void paused() {
             setTitle(mDlgTitlePaused);
             getButton(DialogInterface.BUTTON_POSITIVE).setText(mDlgResumeBtnText);
             mIsPaused = true;
