@@ -174,7 +174,9 @@ public class DownloaderClientMarshaller {
             mContext = c;
             Intent bindIntent = new Intent(c, mDownloaderServiceClass);
             bindIntent.putExtra(PARAM_MESSENGER, mMessenger);
-            if ( !c.bindService(bindIntent, mConnection, Context.BIND_DEBUG_UNBIND) ) {
+            // if ( !c.bindService(bindIntent, mConnection, Context.BIND_DEBUG_UNBIND) ) {
+            // here is a bug. see http://blog.csdn.net/lfdfhl/article/details/14120105
+            if ( !c.bindService(bindIntent, mConnection, Context.BIND_AUTO_CREATE) ) {
                 if ( Constants.LOGVV ) {
                     Log.d(Constants.TAG, "Service Unbound");
                 }
