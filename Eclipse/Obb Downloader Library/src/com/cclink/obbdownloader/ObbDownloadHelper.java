@@ -40,7 +40,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
     }
 
     private Context mContext;
-    private obbDownloadListener mListener;
+    private ObbDownloadListener mListener;
     private IStub mDownloaderClientStub;
     private IDownloaderService mRemoteService;
     private MyProgressDialog mDownloadProgressDlg;
@@ -95,7 +95,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
         return true;
     }
     
-    public void downloadExpansionFiles(Activity activity, obbDownloadListener listener) {
+    public void downloadExpansionFiles(Activity activity, ObbDownloadListener listener) {
         try {
             mListener = listener;
             mIsFinished = false;
