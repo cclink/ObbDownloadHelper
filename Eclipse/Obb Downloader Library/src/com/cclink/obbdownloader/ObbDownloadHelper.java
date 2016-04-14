@@ -40,7 +40,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
     }
 
     private Context mContext;
-    private onDownloadStateChanged mListener;
+    private obbDownloadListener mListener;
     private IStub mDownloaderClientStub;
     private IDownloaderService mRemoteService;
     private MyProgressDialog mDownloadProgressDlg;
@@ -95,7 +95,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
         return true;
     }
     
-    public void downloadExpansionFiles(Activity activity, onDownloadStateChanged listener) {
+    public void downloadExpansionFiles(Activity activity, obbDownloadListener listener) {
         try {
             mListener = listener;
             mIsFinished = false;
@@ -358,10 +358,5 @@ public class ObbDownloadHelper implements IDownloaderClient {
             getButton(DialogInterface.BUTTON_POSITIVE).setText(mDlgResumeBtnText);
             mIsPaused = true;
         }
-    }
-    
-    public interface onDownloadStateChanged {
-        void onDownloadSuccess();
-        void onDownloadFailed();
     }
 }

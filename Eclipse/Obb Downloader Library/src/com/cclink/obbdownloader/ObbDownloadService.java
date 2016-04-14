@@ -24,7 +24,6 @@ import com.google.android.vending.expansion.downloader.impl.DownloaderService;
  */
 public class ObbDownloadService extends DownloaderService {
 
-
     /**
      * This public key comes from your Android Market publisher account, and it
      * used by the LVL to validate responses from Market on your behalf.
