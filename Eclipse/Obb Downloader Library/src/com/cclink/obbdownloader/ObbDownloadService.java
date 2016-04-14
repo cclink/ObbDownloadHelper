@@ -24,13 +24,16 @@ import com.google.android.vending.expansion.downloader.impl.DownloaderService;
  */
 public class ObbDownloadService extends DownloaderService {
 
+	public static String BASE64_PUBLIC_KEY;
+	public static byte[] SALT;
+	
     /**
      * This public key comes from your Android Market publisher account, and it
      * used by the LVL to validate responses from Market on your behalf.
      */
     @Override
     public String getPublicKey() {
-        return ObbInfo.BASE64_PUBLIC_KEY;
+        return BASE64_PUBLIC_KEY;
     }
 
     /**
@@ -40,7 +43,7 @@ public class ObbDownloadService extends DownloaderService {
      */
     @Override
     public byte[] getSALT() {
-        return ObbInfo.SALT;
+        return SALT;
     }
 
     /**

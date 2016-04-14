@@ -48,23 +48,28 @@ public class ObbDownloadHelper implements IDownloaderClient {
     private boolean mIsConnected;
     private boolean mIsFinished;
 
-    @SuppressWarnings("unused")
-    public ObbDownloadHelper(Context context) {
+    public ObbDownloadHelper(Context context, ObbInfo obbInfo) {
         mContext = context;
         mIsConnected = false;
         mIsFinished = false;
-        if (ObbInfo.MAIN_EXPANSION_FILE_VERSION > 0 && ObbInfo.MAIN_EXPANSION_FILE_SIZE > 0) {
-            if (ObbInfo.PATCH_EXPANSION_FILE_VERSION > 0 && ObbInfo.PATCH_EXPANSION_FILE_SIZE > 0) {
+        int mainVer = obbInfo.getMainObbVersion();
+        long mainSize = obbInfo.getMainObbFileSize();
+        int patchVer = obbInfo.getPatchObbVersion();
+        long patchSize = obbInfo.getPatchObbFileSize();
+        if (mainVer > 0 && patchVer > 0) {
+            if (mainSize > 0 && patchSize > 0) {
                 xAPKS = new XAPKFile[2];
-                xAPKS[0] = new XAPKFile(true, ObbInfo.MAIN_EXPANSION_FILE_VERSION, ObbInfo.MAIN_EXPANSION_FILE_SIZE);
-                xAPKS[1] = new XAPKFile(true, ObbInfo.PATCH_EXPANSION_FILE_VERSION, ObbInfo.PATCH_EXPANSION_FILE_SIZE);
+                xAPKS[0] = new XAPKFile(true, mainVer, mainSize);
+                xAPKS[1] = new XAPKFile(true, patchVer, patchSize);
             } else {
                 xAPKS = new XAPKFile[1];
-                xAPKS[0] = new XAPKFile(true, ObbInfo.MAIN_EXPANSION_FILE_VERSION, ObbInfo.MAIN_EXPANSION_FILE_SIZE);
+                xAPKS[0] = new XAPKFile(true, mainVer, mainSize);
             }
         } else {
             xAPKS = new XAPKFile[0];
         }
+        ObbDownloadService.BASE64_PUBLIC_KEY = obbInfo.getPublicKey();
+        ObbDownloadService.SALT = obbInfo.getSalt();
     }
 
     /**
