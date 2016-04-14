@@ -14,7 +14,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		mDownloaderHelper = new ObbDownloadHelper(this);
 		if (!mDownloaderHelper.expansionFilesDelivered()) {
-			mDownloaderHelper.downloadExpansionFiles(this, new obbDownloadListener() {
+			mDownloaderHelper.downloadExpansionFiles(this, new ObbDownloadListener() {
 				@Override
 				public void onDownloadSuccess() {
 					Toast.makeText(MainActivity.this, "Download success.", Toast.LENGTH_SHORT).show();
