@@ -208,14 +208,6 @@ public class ObbDownloadHelper implements IDownloaderClient {
         mDownloadProgressDlg.setProgress(progressInPercent);
     }
 
-    private int getResourceId(String resName, String resType) {
-        return mContext.getResources().getIdentifier(resName, resType, mContext.getPackageName());
-    }
-
-    private String getString(String resName) {
-        return mContext.getString(getResourceId(resName, "string"));
-    }
-
     // Custom progress dialog
     private class MyProgressDialog extends ProgressDialog {
         private boolean mIsPaused;				// Indicates whether the download process is paused
@@ -233,19 +225,19 @@ public class ObbDownloadHelper implements IDownloaderClient {
             super(context);
             mIsPaused = false;
             mIsComplete = false;
-            mDlgTitleDownloading = getString("obb_download_title_downloading");
-            mDlgTitleFailed = getString("obb_download_title_failed");
-            mDlgTitlePaused = getString("obb_download_title_paused");
-            mDlgTitleComplete = getString("obb_download_title_complete");
-            mDlgCancelBtnText = getString("obb_download_btn_cancel");
-            mDlgPauseBtnText = getString("obb_download_btn_pause");
-            mDlgResumeBtnText = getString("obb_download_btn_resume");
-            mDlgRetryBtnText = getString("obb_download_btn_retry");
+            mDlgTitleDownloading = ResourceUtil.getString(mContext, "obb_download_title_downloading");
+            mDlgTitleFailed = ResourceUtil.getString(mContext, "obb_download_title_failed");
+            mDlgTitlePaused = ResourceUtil.getString(mContext, "obb_download_title_paused");
+            mDlgTitleComplete = ResourceUtil.getString(mContext, "obb_download_title_complete");
+            mDlgCancelBtnText = ResourceUtil.getString(mContext, "obb_download_btn_cancel");
+            mDlgPauseBtnText = ResourceUtil.getString(mContext, "obb_download_btn_pause");
+            mDlgResumeBtnText = ResourceUtil.getString(mContext, "obb_download_btn_resume");
+            mDlgRetryBtnText = ResourceUtil.getString(mContext, "obb_download_btn_retry");
             setIndeterminate(false);
             setCanceledOnTouchOutside(false);
             setCancelable(false);
             setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            setIcon(getResourceId("obb_downloader_indicator", "drawable"));
+            setIcon(ResourceUtil.getResourceId(mContext, "obb_downloader_indicator", "drawable"));
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             setTitle(mDlgTitleDownloading);
