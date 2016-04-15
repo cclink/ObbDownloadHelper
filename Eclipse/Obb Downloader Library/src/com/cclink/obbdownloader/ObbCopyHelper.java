@@ -42,70 +42,21 @@ public class ObbCopyHelper {
         }
     }
 	
-	private XAPKFile[] getAllXAPKs() {
-		return xAPKS;
-	}
-	
-	private XAPKFile[] getMainXAPKs() {
-		for (XAPKFile xf : xAPKS) {
-			if (xf.mIsMain) {
-				XAPKFile[] xfs = new XAPKFile[1];
-				xfs[0] = xf;
-				return xfs;
-			}
-		}
-		XAPKFile[] xfs = new XAPKFile[0];
-		return xfs;
-	}
-	
-	private XAPKFile[] getPatchXAPKs() {
-		for (XAPKFile xf : xAPKS) {
-			if (!xf.mIsMain) {
-				XAPKFile[] xfs = new XAPKFile[1];
-				xfs[0] = xf;
-				return xfs;
-			}
-		}
-		XAPKFile[] xfs = new XAPKFile[0];
-		return xfs;
-	}
-	
-	private boolean checkXAPKs(XAPKFile[] xfs) {
-		if (xfs.length == 0) {
-    		Log.i("APKExpansionCopy", "Copy failed: No expansion files");
-    		return false;
-		}
-    	for (XAPKFile xf : xfs) {
-            String fileName = Helpers.getExpansionAPKFileName(mContext, xf.mIsMain, xf.mFileVersion);
-            if (!Helpers.doesFileExist(mContext, fileName, xf.mFileSize, false)) {
-                if (xf.mIsMain) {
-                    Log.i("APKExpansionCopy", "Copy failed: Main expansion file does not exist");
-                } else {
-                    Log.i("APKExpansionCopy", "Copy failed: Patch expansion file does not exist");
-                }
-                return false;
-            }
-        }
-    	return true;
-	}
-	
 	public void copyAllToFolder(Context context, String folder, ObbCopyListener listener) {
-		XAPKFile[] xfs = getAllXAPKs();
-		copy(xfs, folder, listener);
+		copy(xAPKS, folder, listener);
     }
     
     public void copyMainobbToFolder(Context context, String folder, ObbCopyListener listener) {
-    	XAPKFile[] xfs = getMainXAPKs();
-    	copy(xfs, folder, listener);
+    	copy(XAPKsHelper.getMainXAPKs(xAPKS), folder, listener);
     }
     
     public void copyPatchobbToFolder(Context context, String folder, ObbCopyListener listener) {
-    	XAPKFile[] xfs = getPatchXAPKs();
-    	copy(xfs, folder, listener);
+    	copy(XAPKsHelper.getPatchXAPKs(xAPKS), folder, listener);
     }
     
     private void copy(XAPKFile[] xfs, String folder, ObbCopyListener listener) {
-    	if (!checkXAPKs(xfs)) {
+    	if (!XAPKsHelper.checkXAPKs(mContext, xfs)) {
+    		Log.w("APKExpansionCopy", "Copy failed, obb file check failed");
     		listener.onCopyFailed();
     	}
     	// run the copy task

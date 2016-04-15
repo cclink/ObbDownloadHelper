@@ -44,70 +44,21 @@ public class ObbUnzipHelper {
         }
     }
 	
-	private XAPKFile[] getAllXAPKs() {
-		return xAPKS;
-	}
-	
-	private XAPKFile[] getMainXAPKs() {
-		for (XAPKFile xf : xAPKS) {
-			if (xf.mIsMain) {
-				XAPKFile[] xfs = new XAPKFile[1];
-				xfs[0] = xf;
-				return xfs;
-			}
-		}
-		XAPKFile[] xfs = new XAPKFile[0];
-		return xfs;
-	}
-	
-	private XAPKFile[] getPatchXAPKs() {
-		for (XAPKFile xf : xAPKS) {
-			if (!xf.mIsMain) {
-				XAPKFile[] xfs = new XAPKFile[1];
-				xfs[0] = xf;
-				return xfs;
-			}
-		}
-		XAPKFile[] xfs = new XAPKFile[0];
-		return xfs;
-	}
-	
-	private boolean checkXAPKs(XAPKFile[] xfs) {
-		if (xfs.length == 0) {
-    		Log.i("APKExpansionUnzip", "Unzip failed: No expansion files");
-    		return false;
-		}
-    	for (XAPKFile xf : xfs) {
-            String fileName = Helpers.getExpansionAPKFileName(mContext, xf.mIsMain, xf.mFileVersion);
-            if (!Helpers.doesFileExist(mContext, fileName, xf.mFileSize, false)) {
-                if (xf.mIsMain) {
-                    Log.i("APKExpansionUnzip", "Unzip failed: Main expansion file does not exist");
-                } else {
-                    Log.i("APKExpansionUnzip", "Unzip failed: Patch expansion file does not exist");
-                }
-                return false;
-            }
-        }
-    	return true;
-	}
-	
 	public void unzipAllToFolder(Context context, String folder, ObbUnzipListener listener) {
-		XAPKFile[] xfs = getAllXAPKs();
-		unzip(xfs, folder, listener);
+		unzip(xAPKS, folder, listener);
     }
     
     public void unzipMainobbToFolder(Context context, String folder, ObbUnzipListener listener) {
-    	XAPKFile[] xfs = getMainXAPKs();
-    	unzip(xfs, folder, listener);
+    	unzip(XAPKsHelper.getMainXAPKs(xAPKS), folder, listener);
     }
     
     public void unzipPatchobbToFolder(Context context, String folder, ObbUnzipListener listener) {
-    	XAPKFile[] xfs = getPatchXAPKs();
-    	unzip(xfs, folder, listener);
+    	unzip(XAPKsHelper.getPatchXAPKs(xAPKS), folder, listener);
     }
     
     private void unzip(XAPKFile[] xfs, String folder, ObbUnzipListener listener) {
-    	if (!checkXAPKs(xfs)) {
+    	if (!XAPKsHelper.checkXAPKs(mContext, xfs)) {
+    		Log.w("APKExpansionUnzip", "Unzip failed, obb file check failed");
     		listener.onUnzipFailed();
     	}
     	// run the unzip task
