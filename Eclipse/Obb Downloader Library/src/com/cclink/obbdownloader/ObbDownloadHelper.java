@@ -71,14 +71,14 @@ public class ObbDownloadHelper implements IDownloaderClient {
             String fileName = Helpers.getExpansionAPKFileName(mContext, xf.mIsMain, xf.mFileVersion);
             if (!Helpers.doesFileExist(mContext, fileName, xf.mFileSize, false)) {
                 if (xf.mIsMain) {
-                    Log.i("APKExpansionDownloader", "Expansion files is not delivered: main obb does not exist");
+                    Log.i("APKExpansionDownloader", "Expansion files are not delivered: main obb does not exist");
                 } else {
-                    Log.i("APKExpansionDownloader", "Expansion files is not delivered: patch obb does not exist");
+                    Log.i("APKExpansionDownloader", "Expansion files are not delivered: patch obb does not exist");
                 }
                 return false;
             }
         }
-        Log.i("APKExpansionDownloader", "Expansion files is already delivered");
+        Log.i("APKExpansionDownloader", "Expansion files are already delivered");
         return true;
     }
     
