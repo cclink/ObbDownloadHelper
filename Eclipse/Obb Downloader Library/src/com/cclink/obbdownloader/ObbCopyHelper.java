@@ -57,7 +57,9 @@ public class ObbCopyHelper {
     private void copy(XAPKFile[] xfs, String folder, ObbCopyListener listener) {
     	if (!XAPKsHelper.checkXAPKs(mContext, xfs)) {
     		Log.w("APKExpansionCopy", "Copy failed, obb file check failed");
-    		listener.onCopyFailed();
+    		if (listener != null) {
+    			listener.onCopyFailed();
+			}
     	}
     	// run the copy task
     	else {

@@ -59,7 +59,9 @@ public class ObbUnzipHelper {
     private void unzip(XAPKFile[] xfs, String folder, ObbUnzipListener listener) {
     	if (!XAPKsHelper.checkXAPKs(mContext, xfs)) {
     		Log.w("APKExpansionUnzip", "Unzip failed, obb file check failed");
-    		listener.onUnzipFailed();
+    		if (listener != null) {
+    			listener.onUnzipFailed();
+			}
     	}
     	// run the unzip task
     	else {
@@ -157,7 +159,8 @@ public class ObbUnzipHelper {
                         }
                         in = zf.getInputStream(entry);
                         out = new FileOutputStream(desFile);
-                        byte buffer[] = new byte[1024];
+                        // 8k gains more performance than 1k 
+                        byte buffer[] = new byte[1024 * 8];
                         int realLength;
                         while ((realLength = in.read(buffer)) > 0) {
                             out.write(buffer, 0, realLength);
