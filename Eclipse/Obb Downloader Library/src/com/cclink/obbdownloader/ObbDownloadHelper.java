@@ -42,7 +42,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
             if (mainSize > 0 && patchSize > 0) {
                 xAPKS = new XAPKFile[2];
                 xAPKS[0] = new XAPKFile(true, mainVer, mainSize);
-                xAPKS[1] = new XAPKFile(true, patchVer, patchSize);
+                xAPKS[1] = new XAPKFile(false, patchVer, patchSize);
             } else {
                 xAPKS = new XAPKFile[1];
                 xAPKS[0] = new XAPKFile(true, mainVer, mainSize);
