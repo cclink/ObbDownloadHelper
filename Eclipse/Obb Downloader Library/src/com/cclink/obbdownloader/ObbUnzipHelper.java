@@ -252,7 +252,6 @@ public class ObbUnzipHelper {
     }
     
     private class UnzipProgressDialog extends ProgressDialog {
-
 		public UnzipProgressDialog(Context context) {
 			super(context);
 			setIndeterminate(false);
@@ -261,7 +260,7 @@ public class ObbUnzipHelper {
             setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            setTitle(ResourceUtil.getString(mContext, "obb_download_title_coping"));
+            setTitle(ResourceUtil.getString(mContext, "obb_download_title_unziping"));
             setProgress(0);
             setMax(100);
 		}

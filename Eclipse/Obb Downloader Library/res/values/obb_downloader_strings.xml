@@ -3,6 +3,8 @@
     <string name="obb_download_title_failed">下载失败</string>
     <string name="obb_download_title_paused">下载暂停</string>
     <string name="obb_download_title_complete">下载完成</string>
+    <string name="obb_download_title_unziping">正在解压缩文件，请稍等</string>
+    <string name="obb_download_title_coping">正在解压缩文件，请稍等</string>
     <string name="obb_download_btn_cancel">取消</string>
     <string name="obb_download_btn_pause">暂停</string>
     <string name="obb_download_btn_resume">继续</string>
