@@ -119,7 +119,7 @@ public class ObbCopyHelper {
     			long copiedSize = 0;
     			int lastPercent = 0;
     			// 8k gains more performance than 1k 
-                byte buffer[] = new byte[1024 * 8];
+                byte buffer[] = new byte[1024 * 16];
                 int realLength;
                 while ((realLength = in.read(buffer)) > 0) {
                     out.write(buffer, 0, realLength);
