@@ -13,54 +13,74 @@ import android.content.Context;
 public class ObbHelper {
 	
 	private Context mContext;
+	private ObbInfo mObbInfo;
     private ObbDownloadHelper mDownloadHelper;
     private ObbCopyHelper mCopyHelper;
     private ObbUnzipHelper mUnzipHelper;
     
     public ObbHelper(Context context, ObbInfo obbInfo) {
         mContext = context;
-        mDownloadHelper = new ObbDownloadHelper(context, obbInfo);
-        mCopyHelper = new ObbCopyHelper(context, obbInfo);
-        mUnzipHelper = new ObbUnzipHelper(context, obbInfo);
+        mObbInfo = obbInfo;
     }
     
     public boolean expansionFilesDelivered() {
-    	return mDownloadHelper.expansionFilesDelivered();
+    	return getDownloaderHelper().expansionFilesDelivered();
     }
     
     public void downloadExpansionFiles(Activity activity, ObbDownloadListener listener) {
-    	mDownloadHelper.downloadExpansionFiles(activity, listener);;
+    	getDownloaderHelper().downloadExpansionFiles(activity, listener);;
     }
     
     public void connect() {
-    	mDownloadHelper.connect();
+    	getDownloaderHelper().connect();
     }
     
     public void disconnect() {
-    	mDownloadHelper.disconnect();
+    	getDownloaderHelper().disconnect();
     }
     
     public void copyAllToFolder(String folder, ObbCopyListener listener) {
-    	mCopyHelper.copyAllToFolder(folder, listener);
+    	getCopyHelper().copyAllToFolder(folder, listener);
     }
     
     public void copyMainobbToFolder(String folder, ObbCopyListener listener) {
-    	mCopyHelper.copyMainobbToFolder(folder, listener);
+    	getCopyHelper().copyMainobbToFolder(folder, listener);
     }
     
     public void copyPatchobbToFolder(String folder, ObbCopyListener listener) {
-    	mCopyHelper.copyPatchobbToFolder(folder, listener);
+    	getCopyHelper().copyPatchobbToFolder(folder, listener);
     }
     
     public void unzipAllToFolder(String folder, ObbUnzipListener listener) {
-    	mUnzipHelper.unzipAllToFolder(folder, listener);
+    	getUnzipHelper().unzipAllToFolder(folder, listener);
     }
     
     public void unzipMainobbToFolder(String folder, ObbUnzipListener listener) {
-    	mUnzipHelper.unzipMainobbToFolder(folder, listener);
+    	getUnzipHelper().unzipMainobbToFolder(folder, listener);
     }
     
     public void unzipPatchobbToFolder(String folder, ObbUnzipListener listener) {
-    	mUnzipHelper.unzipPatchobbToFolder(folder, listener);
+    	getUnzipHelper().unzipPatchobbToFolder(folder, listener);
+    }
+    
+    private ObbDownloadHelper getDownloaderHelper() {
+    	if (mDownloadHelper == null) {
+    		mDownloadHelper = new ObbDownloadHelper(mContext, mObbInfo);
+		}
+    	return mDownloadHelper;
+    }
+    
+    private ObbCopyHelper getCopyHelper() {
+    	if (mCopyHelper == null) {
+    		mCopyHelper = new ObbCopyHelper(mContext, mObbInfo);
+		}
+    	return mCopyHelper;
+    }
+    
+    private ObbUnzipHelper getUnzipHelper() {
+    	if (mUnzipHelper == null) {
+    		mUnzipHelper = new ObbUnzipHelper(mContext, mObbInfo);
+		}
+    	return mUnzipHelper;
     }
 }
