@@ -1,4 +1,4 @@
-package com.cclink.obbdownloader;
+package com.cclink.obbdownloader.copy;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.cclink.obbdownloader.ObbInfo;
+import com.cclink.obbdownloader.common.XAPKFile;
+import com.cclink.obbdownloader.util.ResourceUtil;
+import com.cclink.obbdownloader.util.XAPKFileUitl;
 import com.google.android.vending.expansion.downloader.Helpers;
 
 import android.app.ProgressDialog;
@@ -47,15 +51,15 @@ public class ObbCopyHelper {
     }
     
     public void copyMainobbToFolder(Context context, String folder, ObbCopyListener listener) {
-    	copy(XAPKsHelper.getMainXAPKs(xAPKS), folder, listener);
+    	copy(XAPKFileUitl.getMainXAPKs(xAPKS), folder, listener);
     }
     
     public void copyPatchobbToFolder(Context context, String folder, ObbCopyListener listener) {
-    	copy(XAPKsHelper.getPatchXAPKs(xAPKS), folder, listener);
+    	copy(XAPKFileUitl.getPatchXAPKs(xAPKS), folder, listener);
     }
     
     private void copy(XAPKFile[] xfs, String folder, ObbCopyListener listener) {
-    	if (!XAPKsHelper.checkXAPKs(mContext, xfs)) {
+    	if (!XAPKFileUitl.checkXAPKs(mContext, xfs)) {
     		Log.w("APKExpansionCopy", "Copy failed, obb file check failed");
     		if (listener != null) {
     			listener.onCopyFailed();

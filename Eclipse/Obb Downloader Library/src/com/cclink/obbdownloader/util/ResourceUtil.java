@@ -1,4 +1,4 @@
-package com.cclink.obbdownloader;
+package com.cclink.obbdownloader.util;
 
 import android.content.Context;
 

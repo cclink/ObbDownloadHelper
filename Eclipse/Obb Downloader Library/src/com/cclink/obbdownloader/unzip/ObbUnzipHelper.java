@@ -1,4 +1,4 @@
-package com.cclink.obbdownloader;
+package com.cclink.obbdownloader.unzip;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,6 +9,10 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import com.cclink.obbdownloader.ObbInfo;
+import com.cclink.obbdownloader.common.XAPKFile;
+import com.cclink.obbdownloader.util.ResourceUtil;
+import com.cclink.obbdownloader.util.XAPKFileUitl;
 import com.google.android.vending.expansion.downloader.Helpers;
 
 import android.app.ProgressDialog;
@@ -49,15 +53,15 @@ public class ObbUnzipHelper {
     }
     
     public void unzipMainobbToFolder(Context context, String folder, ObbUnzipListener listener) {
-    	unzip(XAPKsHelper.getMainXAPKs(xAPKS), folder, listener);
+    	unzip(XAPKFileUitl.getMainXAPKs(xAPKS), folder, listener);
     }
     
     public void unzipPatchobbToFolder(Context context, String folder, ObbUnzipListener listener) {
-    	unzip(XAPKsHelper.getPatchXAPKs(xAPKS), folder, listener);
+    	unzip(XAPKFileUitl.getPatchXAPKs(xAPKS), folder, listener);
     }
     
     private void unzip(XAPKFile[] xfs, String folder, ObbUnzipListener listener) {
-    	if (!XAPKsHelper.checkXAPKs(mContext, xfs)) {
+    	if (!XAPKFileUitl.checkXAPKs(mContext, xfs)) {
     		Log.w("APKExpansionUnzip", "Unzip failed, obb file check failed");
     		if (listener != null) {
     			listener.onUnzipFailed();

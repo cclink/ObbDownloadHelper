@@ -1,4 +1,4 @@
-package com.cclink.obbdownloader;
+package com.cclink.obbdownloader.download;
 /*
  * Copyright (C) 2012 The Android Open Source Project
  *

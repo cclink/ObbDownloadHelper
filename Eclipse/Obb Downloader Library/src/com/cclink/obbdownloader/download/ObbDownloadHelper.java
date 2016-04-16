@@ -1,5 +1,8 @@
-package com.cclink.obbdownloader;
+package com.cclink.obbdownloader.download;
 
+import com.cclink.obbdownloader.ObbInfo;
+import com.cclink.obbdownloader.common.XAPKFile;
+import com.cclink.obbdownloader.util.ResourceUtil;
 import com.google.android.vending.expansion.downloader.DownloadProgressInfo;
 import com.google.android.vending.expansion.downloader.DownloaderClientMarshaller;
 import com.google.android.vending.expansion.downloader.DownloaderServiceMarshaller;

@@ -1,10 +1,11 @@
-package com.cclink.obbdownloader;
+package com.cclink.obbdownloader.util;
 
+import com.cclink.obbdownloader.common.XAPKFile;
 import com.google.android.vending.expansion.downloader.Helpers;
 
 import android.content.Context;
 
-public class XAPKsHelper {
+public class XAPKFileUitl {
 
 	public static XAPKFile[] getMainXAPKs(XAPKFile[] xAPKS) {
 		for (XAPKFile xf : xAPKS) {
