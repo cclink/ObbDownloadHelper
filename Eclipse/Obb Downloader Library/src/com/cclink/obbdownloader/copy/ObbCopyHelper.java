@@ -46,15 +46,15 @@ public class ObbCopyHelper {
         }
     }
 	
-	public void copyAllToFolder(Context context, String folder, ObbCopyListener listener) {
+	public void copyAllToFolder(String folder, ObbCopyListener listener) {
 		copy(xAPKS, folder, listener);
     }
     
-    public void copyMainobbToFolder(Context context, String folder, ObbCopyListener listener) {
+    public void copyMainobbToFolder(String folder, ObbCopyListener listener) {
     	copy(XAPKFileUitl.getMainXAPKs(xAPKS), folder, listener);
     }
     
-    public void copyPatchobbToFolder(Context context, String folder, ObbCopyListener listener) {
+    public void copyPatchobbToFolder(String folder, ObbCopyListener listener) {
     	copy(XAPKFileUitl.getPatchXAPKs(xAPKS), folder, listener);
     }
     

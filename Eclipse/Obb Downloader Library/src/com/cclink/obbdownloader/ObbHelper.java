@@ -40,27 +40,27 @@ public class ObbHelper {
     	mDownloadHelper.disconnect();
     }
     
-    public void copyAllToFolder(Context context, String folder, ObbCopyListener listener) {
-    	mCopyHelper.copyAllToFolder(mContext, folder, listener);
+    public void copyAllToFolder(String folder, ObbCopyListener listener) {
+    	mCopyHelper.copyAllToFolder(folder, listener);
     }
     
-    public void copyMainobbToFolder(Context context, String folder, ObbCopyListener listener) {
-    	mCopyHelper.copyMainobbToFolder(mContext, folder, listener);
+    public void copyMainobbToFolder(String folder, ObbCopyListener listener) {
+    	mCopyHelper.copyMainobbToFolder(folder, listener);
     }
     
-    public void copyPatchobbToFolder(Context context, String folder, ObbCopyListener listener) {
-    	mCopyHelper.copyPatchobbToFolder(mContext, folder, listener);
+    public void copyPatchobbToFolder(String folder, ObbCopyListener listener) {
+    	mCopyHelper.copyPatchobbToFolder(folder, listener);
     }
     
-    public void unzipAllToFolder(Context context, String folder, ObbUnzipListener listener) {
-    	mUnzipHelper.unzipAllToFolder(mContext, folder, listener);
+    public void unzipAllToFolder(String folder, ObbUnzipListener listener) {
+    	mUnzipHelper.unzipAllToFolder(folder, listener);
     }
     
-    public void unzipMainobbToFolder(Context context, String folder, ObbUnzipListener listener) {
-    	mUnzipHelper.unzipMainobbToFolder(mContext, folder, listener);
+    public void unzipMainobbToFolder(String folder, ObbUnzipListener listener) {
+    	mUnzipHelper.unzipMainobbToFolder(folder, listener);
     }
     
-    public void unzipPatchobbToFolder(Context context, String folder, ObbUnzipListener listener) {
-    	mUnzipHelper.unzipPatchobbToFolder(mContext, folder, listener);
+    public void unzipPatchobbToFolder(String folder, ObbUnzipListener listener) {
+    	mUnzipHelper.unzipPatchobbToFolder(folder, listener);
     }
 }

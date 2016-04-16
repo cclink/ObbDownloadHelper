@@ -48,15 +48,15 @@ public class ObbUnzipHelper {
         }
     }
 	
-	public void unzipAllToFolder(Context context, String folder, ObbUnzipListener listener) {
+	public void unzipAllToFolder(String folder, ObbUnzipListener listener) {
 		unzip(xAPKS, folder, listener);
     }
     
-    public void unzipMainobbToFolder(Context context, String folder, ObbUnzipListener listener) {
+    public void unzipMainobbToFolder(String folder, ObbUnzipListener listener) {
     	unzip(XAPKFileUitl.getMainXAPKs(xAPKS), folder, listener);
     }
     
-    public void unzipPatchobbToFolder(Context context, String folder, ObbUnzipListener listener) {
+    public void unzipPatchobbToFolder(String folder, ObbUnzipListener listener) {
     	unzip(XAPKFileUitl.getPatchXAPKs(xAPKS), folder, listener);
     }
     
