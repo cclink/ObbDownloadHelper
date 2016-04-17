@@ -27,8 +27,8 @@ public class ObbHelper {
     	return getDownloaderHelper().expansionFilesDelivered();
     }
     
-    public void downloadExpansionFiles(Activity activity, ObbDownloadListener listener) {
-    	getDownloaderHelper().downloadExpansionFiles(activity, listener);;
+    public void downloadExpansionFiles(Activity activity, final ObbHelperListener listener) {
+    	getDownloaderHelper().downloadExpansionFiles(activity, getDownloadListener(listener));
     }
     
     public void connect() {
@@ -39,28 +39,28 @@ public class ObbHelper {
     	getDownloaderHelper().disconnect();
     }
     
-    public void copyAllToFolder(String folder, ObbCopyListener listener) {
-    	getCopyHelper().copyAllToFolder(folder, listener);
+    public void copyAllToFolder(String folder, final ObbHelperListener listener) {
+    	getCopyHelper().copyAllToFolder(folder, getCopyListener(listener));
     }
     
-    public void copyMainobbToFolder(String folder, ObbCopyListener listener) {
-    	getCopyHelper().copyMainobbToFolder(folder, listener);
+    public void copyMainobbToFolder(String folder, final ObbHelperListener listener) {
+    	getCopyHelper().copyMainobbToFolder(folder, getCopyListener(listener));
     }
     
-    public void copyPatchobbToFolder(String folder, ObbCopyListener listener) {
-    	getCopyHelper().copyPatchobbToFolder(folder, listener);
+    public void copyPatchobbToFolder(String folder, final ObbHelperListener listener) {
+    	getCopyHelper().copyPatchobbToFolder(folder, getCopyListener(listener));
     }
     
-    public void unzipAllToFolder(String folder, ObbUnzipListener listener) {
-    	getUnzipHelper().unzipAllToFolder(folder, listener);
+    public void unzipAllToFolder(String folder, final ObbHelperListener listener) {
+    	getUnzipHelper().unzipAllToFolder(folder, getUnzipListener(listener));
     }
     
-    public void unzipMainobbToFolder(String folder, ObbUnzipListener listener) {
-    	getUnzipHelper().unzipMainobbToFolder(folder, listener);
+    public void unzipMainobbToFolder(String folder, final ObbHelperListener listener) {
+    	getUnzipHelper().unzipMainobbToFolder(folder, getUnzipListener(listener));
     }
     
-    public void unzipPatchobbToFolder(String folder, ObbUnzipListener listener) {
-    	getUnzipHelper().unzipPatchobbToFolder(folder, listener);
+    public void unzipPatchobbToFolder(String folder, final ObbHelperListener listener) {
+    	getUnzipHelper().unzipPatchobbToFolder(folder, getUnzipListener(listener));
     }
     
     private ObbDownloadHelper getDownloaderHelper() {
@@ -82,5 +82,56 @@ public class ObbHelper {
     		mUnzipHelper = new ObbUnzipHelper(mContext, mObbInfo);
 		}
     	return mUnzipHelper;
+    }
+    
+    private ObbDownloadListener getDownloadListener(final ObbHelperListener listener) {
+    	if (listener != null) {
+    		return new ObbDownloadListener() {
+    			@Override
+    			public void onDownloadFailed() {
+    				listener.onFailed();
+    			}
+    			@Override
+    			public void onDownloadSuccess() {
+    				listener.onSuccess();
+    			}
+    		};
+		} else {
+			return null;
+		}
+    }
+    
+    private ObbCopyListener getCopyListener(final ObbHelperListener listener) {
+    	if (listener != null) {
+    		return new ObbCopyListener() {
+    			@Override
+    			public void onCopyFailed() {
+    				listener.onFailed();
+    			}
+    			@Override
+    			public void onCopyComplete() {
+    				listener.onSuccess();
+    			}
+    		};
+		} else {
+			return null;
+		}
+    }
+    
+    private ObbUnzipListener getUnzipListener(final ObbHelperListener listener) {
+    	if (listener != null) {
+    		return new ObbUnzipListener() {
+    			@Override
+    			public void onUnzipFailed() {
+    				listener.onFailed();
+    			}
+    			@Override
+    			public void onUnzipComplete() {
+    				listener.onSuccess();
+    			}
+    		};
+		} else {
+			return null;
+		}
     }
 }
