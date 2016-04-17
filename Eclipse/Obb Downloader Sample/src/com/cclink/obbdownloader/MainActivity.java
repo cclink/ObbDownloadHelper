@@ -46,14 +46,15 @@ public class MainActivity extends Activity {
 				return 5570L;
 			}
 		});
+		
 		// Check whether the obb files are delivered.
 		if (!mObbHelper.expansionFilesDelivered()) {
-			// The obb files aren't delivered, so we should download the obb files.
+			// The obb files haven't delivered, so we should download the obb files.
 			mObbHelper.downloadExpansionFiles(this, new ObbHelperListener() {
 				@Override
 				public void onSuccess() {
 					Toast.makeText(MainActivity.this, "Download success.", Toast.LENGTH_SHORT).show();
-					// The obb files have been downloaded, you can use them directly.
+					// The obb files have been download, you can use them directly.
 					// Also you can unzip or copy them to a target folder.
 					String folder = getExternalFilesDir(null).toString();
 					mObbHelper.unzipMainobbToFolder(folder, new ObbHelperListener() {
@@ -86,7 +87,7 @@ public class MainActivity extends Activity {
 				}
 			});
 		}
-		// The obb files are already delivered.
+		// The obb files have already delivered.
 		else {
 			Toast.makeText(MainActivity.this, "Expansion files are already delivered.", Toast.LENGTH_SHORT).show();
 		}
