@@ -122,7 +122,7 @@ public class ObbDownloadHelper implements IDownloaderClient {
     	if (!mIsFinished) {
     		disconnect();
         	if (mListener != null) {
-    			mListener.onDownloadSuccess();
+    			mListener.onDownloadComplete();
     		}
         	mIsFinished = true;
 		}

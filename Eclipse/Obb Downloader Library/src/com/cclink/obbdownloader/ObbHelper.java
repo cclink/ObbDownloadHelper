@@ -92,7 +92,7 @@ public class ObbHelper {
     				listener.onFailed();
     			}
     			@Override
-    			public void onDownloadSuccess() {
+    			public void onDownloadComplete() {
     				listener.onSuccess();
     			}
     		};
