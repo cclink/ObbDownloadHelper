@@ -1,6 +1,7 @@
 package com.cclink.obbdownloader.download;
 
 public interface ObbDownloadListener {
-	void onDownloadComplete();
+    void onDownloadComplete();
+
     void onDownloadFailed();
 }

@@ -18,15 +18,16 @@ package com.cclink.obbdownloader.download;
 import com.google.android.vending.expansion.downloader.impl.DownloaderService;
 
 /**
- * This class demonstrates the minimal client implementation of the DownloaderService from
- * the Downloader library.  Since services must be uniquely registered across all of Android
- * it's a good idea for services to reside directly within your Android application package.
+ * This class demonstrates the minimal client implementation of the
+ * DownloaderService from the Downloader library. Since services must be
+ * uniquely registered across all of Android it's a good idea for services to
+ * reside directly within your Android application package.
  */
 public class ObbDownloadService extends DownloaderService {
 
-	public static String BASE64_PUBLIC_KEY;
-	public static byte[] SALT;
-	
+    public static String BASE64_PUBLIC_KEY;
+    public static byte[] SALT;
+
     /**
      * This public key comes from your Android Market publisher account, and it
      * used by the LVL to validate responses from Market on your behalf.

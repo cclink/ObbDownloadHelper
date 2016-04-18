@@ -23,12 +23,12 @@ import android.view.WindowManager;
 
 public class ObbUnzipHelper {
 
-	private Context mContext;
-	private ObbUnzipListener mListener;
-	private UnzipProgressDialog mUnzipProgressDlg;
-	private XAPKFile[] xAPKS;
-	
-	public ObbUnzipHelper(Context context, ObbInfo obbInfo) {
+    private Context mContext;
+    private ObbUnzipListener mListener;
+    private UnzipProgressDialog mUnzipProgressDlg;
+    private XAPKFile[] xAPKS;
+
+    public ObbUnzipHelper(Context context, ObbInfo obbInfo) {
         mContext = context;
         int mainVer = obbInfo.getMainObbVersion();
         long mainSize = obbInfo.getMainObbFileSize();
@@ -47,92 +47,92 @@ public class ObbUnzipHelper {
             xAPKS = new XAPKFile[0];
         }
     }
-	
-	public void unzipAllToFolder(String folder, ObbUnzipListener listener) {
-		unzip(xAPKS, folder, listener);
+
+    public void unzipAllToFolder(String folder, ObbUnzipListener listener) {
+        unzip(xAPKS, folder, listener);
     }
-    
+
     public void unzipMainobbToFolder(String folder, ObbUnzipListener listener) {
-    	unzip(XAPKFileUitl.getMainXAPKs(xAPKS), folder, listener);
+        unzip(XAPKFileUitl.getMainXAPKs(xAPKS), folder, listener);
     }
-    
+
     public void unzipPatchobbToFolder(String folder, ObbUnzipListener listener) {
-    	unzip(XAPKFileUitl.getPatchXAPKs(xAPKS), folder, listener);
+        unzip(XAPKFileUitl.getPatchXAPKs(xAPKS), folder, listener);
     }
-    
+
     private void unzip(XAPKFile[] xfs, String folder, ObbUnzipListener listener) {
-    	if (!XAPKFileUitl.checkXAPKs(mContext, xfs)) {
-    		Log.w("APKExpansionUnzip", "Unzip failed, obb file check failed");
-    		if (listener != null) {
-    			listener.onUnzipFailed();
-			}
-    	}
-    	// run the unzip task
-    	else {
-        	mListener = listener;
-        	new UnzipTask(xAPKS, folder).execute();
-    	}
+        if (!XAPKFileUitl.checkXAPKs(mContext, xfs)) {
+            Log.w("APKExpansionUnzip", "Unzip failed, obb file check failed");
+            if (listener != null) {
+                listener.onUnzipFailed();
+            }
+        }
+        // run the unzip task
+        else {
+            mListener = listener;
+            new UnzipTask(xAPKS, folder).execute();
+        }
     }
-    
+
     private class UnzipTask extends AsyncTask<Void, Integer, Boolean> {
-    	private XAPKFile[] mXFiles;
-    	private String mDestFolder;
-    	
-    	public UnzipTask(XAPKFile[] xfs, String folder) {
-    		mXFiles = xfs;
-    		mDestFolder = folder;
-		}
-    	
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			try {
-				for (XAPKFile xFile : mXFiles) {
-					String fileName = Helpers.getExpansionAPKFileName(mContext, xFile.mIsMain, xFile.mFileVersion);
-		            String srcFileName = Helpers.generateSaveFileName(mContext, fileName);
-		            File srcFile = new File(srcFileName);
-		            if (!unzip(srcFile, mDestFolder)) {
-		            	return false;
-		            }
-				}
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
-		}
-    	
-		private boolean unzip(File src, String dstFolder) throws IOException {
-			if (!src.exists()) {
+        private XAPKFile[] mXFiles;
+        private String mDestFolder;
+
+        public UnzipTask(XAPKFile[] xfs, String folder) {
+            mXFiles = xfs;
+            mDestFolder = folder;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                for (XAPKFile xFile : mXFiles) {
+                    String fileName = Helpers.getExpansionAPKFileName(mContext, xFile.mIsMain, xFile.mFileVersion);
+                    String srcFileName = Helpers.generateSaveFileName(mContext, fileName);
+                    File srcFile = new File(srcFileName);
+                    if (!unzip(srcFile, mDestFolder)) {
+                        return false;
+                    }
+                }
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        private boolean unzip(File src, String dstFolder) throws IOException {
+            if (!src.exists()) {
                 Log.w("APKExpansionUnzip", "Unzip failed, obb file does not exist");
-				return false;
-			}
-			File desDir = new File(dstFolder);
-			if (!desDir.exists()) {
-				if (!desDir.mkdirs()) {
+                return false;
+            }
+            File desDir = new File(dstFolder);
+            if (!desDir.exists()) {
+                if (!desDir.mkdirs()) {
                     Log.w("APKExpansionUnzip", "Unzip failed, create dirs failed");
                     return false;
                 }
-			}
-			
-			mUnzipProgressDlg.setProgress(0);
-			ZipFile zf = new ZipFile(src);
-			InputStream in = null;
-	        OutputStream out = null;
-	        try {
-				Enumeration<?> entries = zf.entries();
-				long totalSize = 0;
-				while (entries.hasMoreElements()) {
-					ZipEntry entry = ((ZipEntry)entries.nextElement());
-					if (entry.isDirectory()) {
-						continue;
-					}
-					totalSize += entry.getSize();
-				}
-				
-				entries = zf.entries();
-				long copiedSize = 0;
-				int lastPercent = 0;
-				while (entries.hasMoreElements()) {
-					ZipEntry entry = ((ZipEntry)entries.nextElement());
+            }
+
+            mUnzipProgressDlg.setProgress(0);
+            ZipFile zf = new ZipFile(src);
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                Enumeration<?> entries = zf.entries();
+                long totalSize = 0;
+                while (entries.hasMoreElements()) {
+                    ZipEntry entry = ((ZipEntry) entries.nextElement());
+                    if (entry.isDirectory()) {
+                        continue;
+                    }
+                    totalSize += entry.getSize();
+                }
+
+                entries = zf.entries();
+                long copiedSize = 0;
+                int lastPercent = 0;
+                while (entries.hasMoreElements()) {
+                    ZipEntry entry = ((ZipEntry) entries.nextElement());
                     if (entry.isDirectory()) {
                         String str = dstFolder + File.separator + entry.getName();
                         File desFile = new File(str);
@@ -163,64 +163,66 @@ public class ObbUnzipHelper {
                         }
                         in = zf.getInputStream(entry);
                         out = new FileOutputStream(desFile);
-                        // 8k gains more performance than 1k 
+                        // 8k gains more performance than 1k
                         byte buffer[] = new byte[1024 * 16];
                         int realLength;
                         while ((realLength = in.read(buffer)) > 0) {
                             out.write(buffer, 0, realLength);
                             copiedSize += realLength;
-                            int percent = (int)(copiedSize * 100 / totalSize);
+                            int percent = (int) (copiedSize * 100 / totalSize);
                             if (percent > 100) {
-								percent = 100;
-							}
+                                percent = 100;
+                            }
                             if (lastPercent != percent) {
-                            	lastPercent = percent;
-                            	mUnzipProgressDlg.setProgress(percent);
-							}
+                                lastPercent = percent;
+                                mUnzipProgressDlg.setProgress(percent);
+                            }
                         }
                     }
-				}
-			} finally {
-				if (in != null) {
-					in.close();
-				}
-				if (out != null) {
-					out.close();
-				}
-				zf.close();
-			}
-			return true;
-	    }
-		
-		@Override
-		protected void onPostExecute(Boolean result) {
-			if (result) {
-				Log.i("APKExpansionUnzip", "Unzip file success");
-				if (mListener != null) {
-					mListener.onUnzipComplete();
-				}
-			} else {
-				Log.w("APKExpansionUnzip", "Unzip file failed");
-				if (mListener != null) {
-					mListener.onUnzipFailed();
-				}
-			}
-			mUnzipProgressDlg.dismiss();
-		}
+                }
+            } finally {
+                if (in != null) {
+                    in.close();
+                }
+                if (out != null) {
+                    out.close();
+                }
+                zf.close();
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                Log.i("APKExpansionUnzip", "Unzip file success");
+                if (mListener != null) {
+                    mListener.onUnzipComplete();
+                }
+            } else {
+                Log.w("APKExpansionUnzip", "Unzip file failed");
+                if (mListener != null) {
+                    mListener.onUnzipFailed();
+                }
+            }
+            mUnzipProgressDlg.dismiss();
+        }
     }
-    
+
     private class UnzipProgressDialog extends ProgressDialog {
-		public UnzipProgressDialog(Context context) {
-			super(context);
-			setIndeterminate(false);
+        public UnzipProgressDialog(Context context) {
+            super(context);
+            setIndeterminate(false);
             setCanceledOnTouchOutside(false);
             setCancelable(false);
             setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+            getWindow().addFlags(
+                    WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             setTitle(ResourceUtil.getString(mContext, "obb_download_title_unziping"));
             setProgress(0);
             setMax(100);
-		}
-	}
+        }
+    }
 }
