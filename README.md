@@ -11,8 +11,8 @@ If you use Eclipse to develope your application, Use the source code in Eclipse 
 If you use Android Studio to develope your application, Use the source code in Android Studio folder.
 
 # Usage
-1. Download the souce code
-2. Reference to the Obb Downloader Library in Eclipse of Android Studio.
+1. Choose folder and download the souce code.
+2. Reference to the Obb Downloader Library in Eclipse or Android Studio.
 3. Use ObbHelper class in the Obb Downloader Library. You can find examples in Obb Downloader Sample Library. 
 
 # Bug Fix
