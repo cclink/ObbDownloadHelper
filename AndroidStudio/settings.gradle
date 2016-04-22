@@ -1,0 +1,4 @@
+include ':googlePlayLicensingLibrary'
+include ':googlePlayAPKExpansionLibrary'
+include ':obbDownloaderLibrary'
+include ':obbDownloaderSample'
