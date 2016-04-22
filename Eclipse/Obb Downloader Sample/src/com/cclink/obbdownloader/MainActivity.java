@@ -96,16 +96,12 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mObbHelper != null) {
-			mObbHelper.connect();
-		}
+		mObbHelper.connect();
 	}
 	
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if (mObbHelper != null) {
-			mObbHelper.disconnect();
-		}
+		mObbHelper.disconnect();
 	}
 }
