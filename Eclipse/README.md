@@ -1,2 +1,0 @@
-# ObbDownloadHelper in Eclipse
-

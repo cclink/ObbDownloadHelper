@@ -7,8 +7,6 @@
     <uses-sdk
         android:minSdkVersion="9"
         android:targetSdkVersion="23" />
-
-	<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="23" />
     
     <!-- Required to access Google Play Licensing -->
     <uses-permission android:name="com.android.vending.CHECK_LICENSE" />
@@ -42,12 +40,12 @@
          In order to start the service, it must be uniquely registered with
          the package manager here.
         -->
-        <service android:name="com.netease.obbdownloader.ObbDownloadService" />
+        <service android:name="com.cclink.obbdownloader.download.ObbDownloadService" />
         <!--
          In order for the alarm manager to contact the downloader script, the receiver
          must be uniquely registered with the package manager here.
         -->
-        <receiver android:name="com.netease.obbdownloader.ObbDownloadReceiver" />
+        <receiver android:name="com.cclink.obbdownloader.download.ObbDownloadReceiverdReceiver" />
     </application>
 
 </manifest>
