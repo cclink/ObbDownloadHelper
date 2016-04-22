@@ -67,8 +67,14 @@ public class ObbCopyHelper {
         }
         // run the copy task
         else {
-            mListener = listener;
-            new CopyTask(xAPKS, folder).execute();
+            String filePath = Helpers.getSaveFilePath(mContext);
+            // if the target folder is the same as the obb files path, we do nothing and just call onCopyComplete()
+            if (filePath.equals(folder)) {
+                listener.onCopyComplete();
+            } else {
+                mListener = listener;
+                new CopyTask(xAPKS, folder).execute();
+            }
         }
     }
 

@@ -1,7 +1,8 @@
 # Description
 Google Play currently requires our APK file is less than 100MB. If we want publish an app which is more than 100MB, we can use the expansion file mechanism provided by Google Play.
 Even Google gives a detailed guidance at http://developer.android.com/intl/zh-cn/google/play/expansion-files.html, it's hard to follow these instructions to get a correct implement of the download process.
-This library simplify the download of apk extension files from Google Play.
+There also some bugs in the provided libraries and sample codes.
+This library simplifies the download of apk extension files from Google Play, and provides a dialog to show the download process and handle with user interactions.
 
 # Choose appropriate folder
 As you see, there are two subfolders in this library.
@@ -9,6 +10,12 @@ As you see, there are two subfolders in this library.
 If you use Eclipse to develope your application, Use the source code in Eclipse folder.
 
 If you use Android Studio to develope your application, Use the source code in Android Studio folder.
+
+# Features
+1. Check whether the obb files are already downloaded.
+2. Download obb files if necessary
+3. Copy obb files to another directory
+4. Unzip obb files to specified directory
 
 # Usage
 1. Choose folder and download the souce code.
