@@ -20,5 +20,4 @@ android {
 
 dependencies {
     compile project(':obbDownloaderLibrary')
-    compile 'com.android.support:support-v4:23.3.0'
 }
