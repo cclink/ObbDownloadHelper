@@ -5,11 +5,13 @@ There also some bugs in the provided libraries and sample codes.
 This library simplifies the download of apk extension files from Google Play, and provides a dialog to show the download process and handle with user interactions.
 
 # Choose appropriate folder
-As you see, there are two subfolders in this library.
+As you see, there are three subfolders in this library.
 
-If you use Eclipse to develope your application, Use the source code in Eclipse folder.
+If you use Eclipse to develope your application, use the source code in Eclipse folder. There are four libraries and one sample project. You should import all four libraries into your own project.
 
-If you use Android Studio to develope your application, Use the source code in Android Studio folder.
+The EclipseAllInOne folder is a more convenient version. We merged all four libraries in Eclipse folder into a single library, so that you can import only one library.
+
+If you use Android Studio to develope your application, use the source code in AndroidStudio folder. There also have four libraries (usually called modules in Android Studio) and one sample project. You should import obbDownloaderLibrary module. Android Studio would automatically import other three modules for you.
 
 # Features
 1. Check whether the obb files are already downloaded.
