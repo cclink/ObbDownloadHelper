@@ -45,7 +45,7 @@
          In order for the alarm manager to contact the downloader script, the receiver
          must be uniquely registered with the package manager here.
         -->
-        <receiver android:name="com.cclink.obbdownloader.download.ObbDownloadReceiverdReceiver" />
+        <receiver android:name="com.cclink.obbdownloader.download.ObbDownloadReceiver" />
     </application>
 
 </manifest>
