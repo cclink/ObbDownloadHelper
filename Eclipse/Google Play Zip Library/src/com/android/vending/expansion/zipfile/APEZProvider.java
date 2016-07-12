@@ -20,7 +20,7 @@ package com.android.vending.expansion.zipfile;
 //the AUTHORITY to match what you define in the manifest.
 
 import com.android.vending.expansion.zipfile.ZipResourceFile.ZipEntryRO;
-
+import android.annotation.TargetApi;
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -35,6 +35,7 @@ import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
 
@@ -120,7 +121,8 @@ public abstract class APEZProvider extends ContentProvider {
 	
 	static private final String NO_FILE = "N";
 	
-	private boolean initIfNecessary() {
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+    private boolean initIfNecessary() {
 	    if ( !mInit ) {
             Context ctx = getContext();
             PackageManager pm = ctx.getPackageManager();
