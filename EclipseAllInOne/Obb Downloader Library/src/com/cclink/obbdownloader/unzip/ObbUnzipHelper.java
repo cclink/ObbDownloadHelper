@@ -61,17 +61,17 @@ public class ObbUnzipHelper {
     }
 
     private void unzip(XAPKFile[] xfs, String folder, ObbUnzipListener listener) {
-        if (!XAPKFileUitl.checkXAPKs(mContext, xfs)) {
-            Log.w("APKExpansionUnzip", "Unzip failed, obb file check failed");
-            if (listener != null) {
-                listener.onUnzipFailed();
-            }
-        }
+//        if (!XAPKFileUitl.checkXAPKs(mContext, xfs)) {
+//            Log.w("APKExpansionUnzip", "Unzip failed, obb file check failed");
+//            if (listener != null) {
+//                listener.onUnzipFailed();
+//            }
+//        }
         // run the unzip task
-        else {
+//        else {
             mListener = listener;
             new UnzipTask(xAPKS, folder).execute();
-        }
+//        }
     }
 
     private class UnzipTask extends AsyncTask<Void, Integer, Boolean> {
@@ -100,7 +100,23 @@ public class ObbUnzipHelper {
             }
         }
 
-        private boolean unzip(File src, String dstFolder) throws IOException {
+        @Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+			 mUnzipProgressDlg = new UnzipProgressDialog(mContext);
+	         mUnzipProgressDlg.show();
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			// TODO Auto-generated method stub
+			super.onProgressUpdate(values);
+			
+			mUnzipProgressDlg.setProgress(values[0]);
+		}
+
+		private boolean unzip(File src, String dstFolder) throws IOException {
             if (!src.exists()) {
                 Log.w("APKExpansionUnzip", "Unzip failed, obb file does not exist");
                 return false;
@@ -112,8 +128,10 @@ public class ObbUnzipHelper {
                     return false;
                 }
             }
-
-            mUnzipProgressDlg.setProgress(0);
+            
+            Log.i("APKExpansionUnzip", "unzip progress start!");
+           
+            
             ZipFile zf = new ZipFile(src);
             InputStream in = null;
             OutputStream out = null;
@@ -175,7 +193,9 @@ public class ObbUnzipHelper {
                             }
                             if (lastPercent != percent) {
                                 lastPercent = percent;
-                                mUnzipProgressDlg.setProgress(percent);
+                                Log.i("APKExpansionUnzip", "unzip progress start!"+percent);
+                                
+                                publishProgress(percent);
                             }
                         }
                     }
@@ -205,7 +225,9 @@ public class ObbUnzipHelper {
                     mListener.onUnzipFailed();
                 }
             }
-            mUnzipProgressDlg.dismiss();
+            if (null != mUnzipProgressDlg){
+            	mUnzipProgressDlg.dismiss();
+            }
         }
     }
 
