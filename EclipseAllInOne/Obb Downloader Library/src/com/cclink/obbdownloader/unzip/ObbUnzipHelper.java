@@ -116,7 +116,7 @@ public class ObbUnzipHelper {
 			mUnzipProgressDlg.setProgress(values[0]);
 		}
 
-		private boolean unzip(File src, String dstFolder) throws IOException {
+        private boolean unzip(File src, String dstFolder) throws IOException {
             if (!src.exists()) {
                 Log.w("APKExpansionUnzip", "Unzip failed, obb file does not exist");
                 return false;
@@ -131,7 +131,6 @@ public class ObbUnzipHelper {
             
             Log.i("APKExpansionUnzip", "unzip progress start!");
            
-            
             ZipFile zf = new ZipFile(src);
             InputStream in = null;
             OutputStream out = null;
