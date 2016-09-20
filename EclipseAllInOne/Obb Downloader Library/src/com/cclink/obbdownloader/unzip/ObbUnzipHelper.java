@@ -102,15 +102,14 @@ public class ObbUnzipHelper {
 
         @Override
 		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-			super.onPreExecute();
-			 mUnzipProgressDlg = new UnzipProgressDialog(mContext);
-	         mUnzipProgressDlg.show();
+        	super.onPreExecute();
+        	
+			mUnzipProgressDlg = new UnzipProgressDialog(mContext);
+	        mUnzipProgressDlg.show();
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
-			// TODO Auto-generated method stub
 			super.onProgressUpdate(values);
 			
 			mUnzipProgressDlg.setProgress(values[0]);
