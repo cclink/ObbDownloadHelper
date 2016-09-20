@@ -100,6 +100,21 @@ public class ObbUnzipHelper {
             }
         }
 
+        @Override
+        protected void onPreExecute() {
+        	super.onPreExecute();
+        	
+			mUnzipProgressDlg = new UnzipProgressDialog(mContext);
+	        mUnzipProgressDlg.show();
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			super.onProgressUpdate(values);
+			
+			mUnzipProgressDlg.setProgress(values[0]);
+		}
+
         private boolean unzip(File src, String dstFolder) throws IOException {
             if (!src.exists()) {
                 Log.w("APKExpansionUnzip", "Unzip failed, obb file does not exist");
@@ -112,8 +127,9 @@ public class ObbUnzipHelper {
                     return false;
                 }
             }
-
-            mUnzipProgressDlg.setProgress(0);
+            
+            Log.i("APKExpansionUnzip", "unzip progress start!");
+           
             ZipFile zf = new ZipFile(src);
             InputStream in = null;
             OutputStream out = null;
@@ -175,7 +191,9 @@ public class ObbUnzipHelper {
                             }
                             if (lastPercent != percent) {
                                 lastPercent = percent;
-                                mUnzipProgressDlg.setProgress(percent);
+                                Log.i("APKExpansionUnzip", "unzip progress start!"+percent);
+                                
+                                publishProgress(percent);
                             }
                         }
                     }
@@ -205,7 +223,9 @@ public class ObbUnzipHelper {
                     mListener.onUnzipFailed();
                 }
             }
-            mUnzipProgressDlg.dismiss();
+            if (null != mUnzipProgressDlg){
+            	mUnzipProgressDlg.dismiss();
+            }
         }
     }
 
