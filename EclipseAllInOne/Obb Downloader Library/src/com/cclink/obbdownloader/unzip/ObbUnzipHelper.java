@@ -61,17 +61,17 @@ public class ObbUnzipHelper {
     }
 
     private void unzip(XAPKFile[] xfs, String folder, ObbUnzipListener listener) {
-//        if (!XAPKFileUitl.checkXAPKs(mContext, xfs)) {
-//            Log.w("APKExpansionUnzip", "Unzip failed, obb file check failed");
-//            if (listener != null) {
-//                listener.onUnzipFailed();
-//            }
-//        }
+        if (!XAPKFileUitl.checkXAPKs(mContext, xfs)) {
+            Log.w("APKExpansionUnzip", "Unzip failed, obb file check failed");
+            if (listener != null) {
+                listener.onUnzipFailed();
+            }
+        }
         // run the unzip task
-//        else {
+        else {
             mListener = listener;
             new UnzipTask(xAPKS, folder).execute();
-//        }
+        }
     }
 
     private class UnzipTask extends AsyncTask<Void, Integer, Boolean> {
